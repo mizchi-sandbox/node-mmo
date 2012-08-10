@@ -1,24 +1,31 @@
 #Express
-express = require('express')
+express = require 'express' 
 app = express.createServer()
-app.use(express.static(__dirname + '/public'))
+app.use express.static(__dirname + '/public')
 app.listen(3000)
 console.log('server start:', 3000)
 
 #StateMachine
-World = require('./lib/world')
-world = new World()
+World = require './lib/world' 
+world = new World
 
 #Socket.IO
 io = require('socket.io').listen(app)
-io.sockets.on 'connection', (socket) ->
-  player = world.login(socket.id)
-  socket.on 'key', ({key, state}) ->
-    player.updateKey key, state
+entrance = io.of '/entrance'
+entrance.on 'connection', (socket) ->
+  # init
+  player_id = socket.id
+  world.login player_id
+  socket.emit 'getPlayerData', player_id: player_id
 
+  # on client updating key
+  socket.on 'key', ({key, state}) ->
+    world.updatePlayerKeyState(player_id, key, state)
+
+  # on client disconnection
   socket.on 'disconnect', ->
-    world.logout socket.id
+    world.logout player_id
 
 # emit data by mainloop
 world.start (worldState) ->
-  io.sockets.emit 'update', worldState
+  entrance.emit 'update', worldState

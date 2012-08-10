@@ -2,31 +2,36 @@ Player = require('./player');
 
 class World
   constructor: ->
-    @players = {}
+    @_players = {}
     @FPS = 15
 
+  # return player by id
+  getPlayer: (player_id) ->
+    @_players[player_id]
+
   # cache and return player
-  login: (id) ->
-    @players[id] = new Player(id)
+  login: (player_id) ->
+    @_players[player_id] = new Player(player_id)
 
   # delete cache
-  logout: (id) ->
-    delete @players[id]
+  logout: (player_id) ->
+    delete @_players[player_id]
 
-  #start mainloop
-  start: (callback) ->
+  # update player key state by id
+  updatePlayerKeyState: (player_id, key, state) ->
+    player = @getPlayer(player_id)
+    player.updateKey key, state
+
+  # start mainloop
+  start: (emitter) ->
     do mainloop = =>
-      for id, player of @players
+      for id, player of @_players
         player.move()
-      callback(@)
+      emitter(@)
       setTimeout(mainloop, 1000/@FPS);
 
-  toJson: ->
-    objects = []
-    for id, player of @players
-      objects.push [player.x, player.y]
-    {
-      objects: objects
-    }
+  minify: ->
+    # [[x, y, id]...]
+    ([x, y, id] for id, {x, y} of @_players)
 
 module.exports = World

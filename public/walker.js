@@ -1,5 +1,5 @@
 $(function(){
-  var socket = io.connect();
+  var socket = io.connect('/entrance');
   var game = new Game();
 
   //listener

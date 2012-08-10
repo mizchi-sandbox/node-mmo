@@ -18,8 +18,8 @@ Game.prototype = {
     this.ctx.save();
 
     //draw all objects
-    for(var i in data.players){
-      var obj = data.players[i];
+    for(var i in data._players){
+      var obj = data._players[i];
       this._drawCircle(obj.x, obj.y);
     }
     this.ctx.restore();
