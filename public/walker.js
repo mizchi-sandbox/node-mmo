@@ -1,8 +1,13 @@
 $(function(){
   var socket = io.connect('/entrance');
   var game = new Game();
+  window.playerData = null;
 
   //listener
+  socket.on('getPlayerData', function(data){
+    playerData = data;
+  });
+
   socket.on('update', function(worldState){
     game.render(worldState);
   });
