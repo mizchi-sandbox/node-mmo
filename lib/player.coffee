@@ -1,25 +1,20 @@
-var Player = function(id){
-  this.id = id;
-  this.x = 0;
-  this.y = 0;
-  this.keys = {
-     up   : false,
-     down : false,
-     right: false,
-     left : false
-  };
-};
+class Player
+  constructor: (@id) ->
+    @x = 0
+    @y = 0
+    @_keys =
+      up   : false
+      down : false
+      right: false
+      left : false
 
-Player.prototype = {
-  move: function(){
-    if(this.keys.up)    this.y -= 1
-    if(this.keys.down)  this.y += 1
-    if(this.keys.right) this.x += 1
-    if(this.keys.left)  this.x -= 1
-  },
-  updateKey: function(key, status){
-    this.keys[key] = status;
-  }
-};
+  move: ->
+    if(@_keys.up)    then @y -= 1
+    if(@_keys.down)  then @y += 1
+    if(@_keys.right) then @x += 1
+    if(@_keys.left)  then @x -= 1
 
-module.exports = Player;
+  updateKey: (key, state) ->
+    @_keys[key] = state
+
+module.exports = Player
