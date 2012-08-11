@@ -1,9 +1,20 @@
 #Express
 express = require 'express' 
+assets  = require 'connect-assets'
+
 app = express.createServer()
+
+# middleware
 app.use express.static(__dirname + '/public')
+app.use assets()
+app.set('view engine', 'ejs');
+app.set('view options', { layout: false });
+app.get '/', (req, res) ->
+  res.render 'index'
+
 app.listen(3000)
 console.log('server start:', 3000)
+
 
 #StateMachine
 World = require './lib/world' 
