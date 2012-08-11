@@ -1,27 +1,19 @@
-window.Game = function(){
-  var canvas = document.getElementById('canvas');
-  canvas.width = 400;
-  canvas.height = 300;
-  this.ctx = canvas.getContext('2d');
-};
+class window.Game
+  constructor: ->
+    canvas = document.getElementById 'canvas'
+    canvas.width  = 400
+    canvas.height = 300
+    @ctx = canvas.getContext('2d')
 
-Game.prototype = {
-  _drawCircle: function(x, y){
-    this.ctx.beginPath();
-    this.ctx.arc(x, y, 10, 0, Math.PI*2); // x, y, size, start, end
-    this.ctx.fillStyle = 'rgb(255,0,0)'
-    this.ctx.fill();
-  },
-  render: function(data){
-    //reset canvas before each rendering
-    this.ctx.clearRect(0,0,400,300);
-    this.ctx.save();
+  _drawCircle: (x, y) ->
+    @ctx.beginPath()
+    @ctx.arc(x, y, 10, 0, Math.PI*2)  # x, y, size, start, end
+    @ctx.fillStyle = 'rgb(255,0,0)'
+    @ctx.fill()
 
-    //draw all objects
-    for(var i in data._players){
-      var obj = data._players[i];
-      this._drawCircle(obj.x, obj.y);
-    }
-    this.ctx.restore();
-  }
-};
+  render: (data) ->
+    @ctx.clearRect(0,0,400,300)
+    @ctx.save()
+    for id, player of data._players
+      @_drawCircle(player.x, player.y)
+    @ctx.restore()

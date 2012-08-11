@@ -1,38 +1,30 @@
-$(function(){
-  var socket = io.connect('/entrance');
-  var game = new Game();
-  window.playerData = null;
+$ ->
+  socket = io.connect '/entrance'
+  game = new Game
+  window.playerData = null
 
-  //listener
-  socket.on('getPlayerData', function(data){
-    playerData = data;
-  });
+  #listener
+  socket.on 'getPlayerData', (data) ->
+    playerData = data
 
-  socket.on('update', function(worldState){
-    game.render(worldState);
-  });
+  socket.on 'update', (worldState) ->
+    game.render(worldState)
 
-  //send key logic
-  var KEYCODES = {
+  #send key logic
+  KEYCODES =
     37: 'LEFT',
     38: 'UP',
     39: 'RIGHT',
     40: 'DOWN'
-  };
-  var sendKey = function(code, state){
-    if(KEYCODES[code] !== undefined)
-      socket.emit('key', {
+
+  sendKey = (code, state) ->
+    if KEYCODES[code] isnt undefined
+      socket.emit 'key',
         key   : KEYCODES[code].toLowerCase(),
-        state: state
-      });
-  };
+        state : state
 
-  $(window).keydown(function(e){
-    sendKey(e.keyCode, true);
-  });
+  $(window).keydown (e) ->
+    sendKey e.keyCode, true
 
-  $(window).keyup(function(e){
-    sendKey(e.keyCode, false);
-  });
-
-});
+  $(window).keyup (e) ->
+    sendKey e.keyCode, false
