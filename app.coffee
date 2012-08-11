@@ -1,3 +1,7 @@
+#StateMachine
+World = require './lib/world'
+world = new World
+
 #Express
 express = require 'express' 
 assets  = require 'connect-assets'
@@ -12,6 +16,7 @@ app.set 'view options', layout: false
 app.get '/', (req, res) ->
   res.render 'index'
 
+# session
 RedisStore = require('connect-redis')(express)
 session_store = new RedisStore()
 app.use express.bodyParser()
@@ -19,27 +24,22 @@ app.use express.cookieParser()
 app.use express.session
   secret: '<keyboard cat>'
   store: session_store
-  cookie:
-    maxAge: 60*60*1000
+  cookie: maxAge: 60*60*1000
 
-app.listen(3000)
-console.log('server start:', 3000)
-
-
-#StateMachine
-World = require './lib/world' 
-world = new World
+app.listen(5000)
+console.log('server start:', 5000)
 
 #Socket.IO
 io = require('socket.io').listen(app)
-_cookie = require 'cookie'
+cookie = require 'cookie'
 
 console.log require('connect').utils
 
 io.set 'log level', 1
 io.set 'authorization', (handshake, callback) ->
-  cookie = _cookie.parse handshake.headers.cookie
-  handshake.sid = cookie['connect.sid']
+  decoded_cookie = cookie.parse handshake.headers.cookie
+  handshake.sid = decoded_cookie['connect.sid']
+  console.log decoded_cookie
   session_store.get handshake.sid, (e, data) ->
     handshake.session = data
     callback null, true
