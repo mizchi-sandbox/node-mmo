@@ -1,3 +1,3 @@
-//= require vendor/jquery-1.8.0.min
+//= require_tree ./vendor
 //= require game
 //= require walker
