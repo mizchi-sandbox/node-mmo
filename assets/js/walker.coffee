@@ -41,19 +41,16 @@ $ ->
 
   #send key logic
   KEYCODES =
-    37: 'LEFT',
-    38: 'UP',
-    39: 'RIGHT',
-    40: 'DOWN'
+    37: 'left'
+    38: 'up'
+    39: 'right'
+    40: 'down'
 
-  sendKey = (code, state) ->
-    if KEYCODES[code] isnt undefined
-      socket.emit 'key',
-        key   : KEYCODES[code].toLowerCase(),
-        state : state
+  sendKey = (state) -> (e) ->
+    return if KEYCODES[e.keyCode] is undefined
+    socket.emit 'key',
+      key: KEYCODES[e.keyCode], state: state
 
-  $(window).keydown (e) ->
-    sendKey e.keyCode, true
-
-  $(window).keyup (e) ->
-    sendKey e.keyCode, false
+  $(window).keydown sendKey(true)
+  $(window).keyup sendKey(false)
+  # new SampleGame()
