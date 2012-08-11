@@ -1,4 +1,4 @@
-class window.Game
+class window.MMOGame
   constructor: ->
     canvas = document.getElementById 'canvas'
     canvas.width  = 400
