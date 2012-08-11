@@ -7,8 +7,8 @@ app = express.createServer()
 # middleware
 app.use express.static(__dirname + '/public')
 app.use assets()
-app.set('view engine', 'ejs');
-app.set('view options', { layout: false });
+app.set('view engine', 'ejs')
+app.set('view options', { layout: false })
 app.get '/', (req, res) ->
   res.render 'index'
 
