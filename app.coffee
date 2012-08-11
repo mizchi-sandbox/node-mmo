@@ -12,6 +12,16 @@ app.set 'view options', layout: false
 app.get '/', (req, res) ->
   res.render 'index'
 
+RedisStore = require('connect-redis')(express)
+session_store = new RedisStore()
+app.use express.bodyParser()
+app.use express.cookieParser()
+app.use express.session
+  secret: '<keyboard cat>'
+  store: session_store
+  cookie:
+    maxAge: 60*60*1000
+
 app.listen(3000)
 console.log('server start:', 3000)
 
@@ -22,6 +32,18 @@ world = new World
 
 #Socket.IO
 io = require('socket.io').listen(app)
+_cookie = require 'cookie'
+
+console.log require('connect').utils
+
+io.set 'log level', 1
+io.set 'authorization', (handshake, callback) ->
+  cookie = _cookie.parse handshake.headers.cookie
+  handshake.sid = cookie['connect.sid']
+  session_store.get handshake.sid, (e, data) ->
+    handshake.session = data
+    callback null, true
+
 entrance = io.of '/entrance'
 entrance.on 'connection', (socket) ->
   # init
