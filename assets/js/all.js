@@ -1,3 +1,2 @@
-//= require_tree ./vendor
-//= require game
+//= require vendor/_
 //= require walker
