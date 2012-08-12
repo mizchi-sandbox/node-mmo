@@ -1,5 +1,5 @@
 class Player
-  constructor: (@id) ->
+  constructor: (@user_id) ->
     @x = ~~(Math.random()*320)
     @y = ~~(Math.random()*240)
     @avatar = "2:2:1:2004:21230:22480"
@@ -20,12 +20,12 @@ class Player
     @_keys[key] = state
 
   compless: ->
-    [@x, @y, @id, @avatar]
+    [@x, @y, @user_id, @avatar]
 
-  decode: ([x, y, id, avatar])->
+  decode: ([x, y, user_id, avatar])->
     @x = x
     @y = y
-    @id = id
+    @user_id = user_id
     @avatar = avatar
 
 module.exports = Player

@@ -1,7 +1,7 @@
 {abs} = Math
 class Nmmo.Player extends enchant.Avatar
-  constructor: (avatar_id, @player_id) ->
-    super avatar_id
+  constructor: (avatar, @user_id) ->
+    super avatar
 
     @scaleX = 0.5
     @scaleY = 0.5
@@ -28,10 +28,10 @@ class Nmmo.Player extends enchant.Avatar
       @_last.y = @y
 
   compless: ->
-    [@x, @y, @player_id, @avatar]
+    [@x, @y, @user_id, @avatar]
 
   decode: ([x, y, id, avatar])->
     @x = x
     @y = y
-    @player_id = id
+    @user_id = id
     @avatar = avatar

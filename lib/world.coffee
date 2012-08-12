@@ -6,20 +6,20 @@ class World
     @FPS = 15
 
   # return player by id
-  getPlayer: (player_id) ->
-    @_players[player_id]
+  getPlayer: (user_id) ->
+    @_players[user_id]
 
   # cache and return player
-  login: (player_id) ->
-    @_players[player_id] = new Player(player_id)
+  login: (user_id) ->
+    @_players[user_id] = new Player(user_id)
 
   # delete cache
-  logout: (player_id) ->
-    delete @_players[player_id]
+  logout: (user_id) ->
+    delete @_players[user_id]
 
   # update player key state by id
-  updatePlayerKeyState: (player_id, key, state) ->
-    player = @getPlayer(player_id)
+  updatePlayerKeyState: (user_id, key, state) ->
+    player = @getPlayer(user_id)
     player.updateKey key, state
 
   # start mainloop
@@ -31,6 +31,6 @@ class World
       setTimeout(mainloop, 1000/@FPS);
 
   compless: ->
-    o: ([x, y, id, avatar] for id, {x, y, avatar} of @_players)
+    o: ([x, y, user_id, avatar] for user_id, {x, y, avatar} of @_players)
 
 module.exports = World

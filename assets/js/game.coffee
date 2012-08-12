@@ -11,8 +11,8 @@ class Nmmo.Game extends enchant.Game
     ]
 
   sync: (objects) ->
-    client_ids = (obj.player_id for obj in game.rootScene.childNodes)
-    server_ids = (id for [x, y, id] in objects)
+    client_ids = (obj.user_id for obj in game.rootScene.childNodes)
+    server_ids = (id for [__, __, id] in objects)
 
     # オブジェクトの追加
     for [x, y, id, avatar] in objects
@@ -21,13 +21,12 @@ class Nmmo.Game extends enchant.Game
 
     # オブジェクトの削除
     for node in @rootScene.childNodes
-      unless node.player_id in server_ids
+      unless node.user_id in server_ids
         @rootScene.removeChild node
-
 
   update: (objects) ->
     for [x, y, id] in objects
-      object = _.find @rootScene.childNodes, (obj) -> obj.player_id is id
+      object = _.find @rootScene.childNodes, (obj) -> obj.user_id is id
       object.moveTo x, y
 
   bindSocket: (socket, onEnterFrame) ->

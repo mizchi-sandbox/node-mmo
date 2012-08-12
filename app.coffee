@@ -44,17 +44,17 @@ io.set 'authorization', (handshake, callback) ->
 entrance = io.of '/entrance'
 entrance.on 'connection', (socket) ->
   # init
-  player_id = socket.id
-  world.login player_id
-  socket.emit 'getPlayerData', player_id
+  user_id = socket.id
+  world.login user_id
+  socket.emit 'getPlayerData', user_id
 
   # on client updating key
   socket.on 'key', ({key, state}) ->
-    world.updatePlayerKeyState(player_id, key, state)
+    world.updatePlayerKeyState(user_id, key, state)
 
   # on client disconnection
   socket.on 'disconnect', ->
-    world.logout player_id
+    world.logout user_id
 
 # emit data by mainloop
 world.start (worldState) ->
