@@ -2,7 +2,7 @@ class Player
   constructor: (@user_id) ->
     @x = ~~(Math.random()*320)
     @y = ~~(Math.random()*240)
-    @avatar = "2:2:1:2004:21230:22480"
+    @avatar = "1:10:0:2019:2105:2210"
     @move_speed = 3
     @_keys =
       up   : false
