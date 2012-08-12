@@ -15,11 +15,9 @@ class MyGame extends enchant.Game
       "avatarBg3.png"
     ]
 
-  syncObject: (serverState) ->
-    players = serverState._players
-
+  syncObject: (objects) ->
     client_ids = (obj.player_id for obj in game.rootScene.childNodes)
-    server_ids = (id for id, p of players)
+    server_ids = (id for [x, y, id] in objects)
 
     # オブジェクトの削除
     for node in @rootScene.childNodes
@@ -27,7 +25,7 @@ class MyGame extends enchant.Game
         @rootScene.removeChild node
 
     # オブジェクトの追加
-    for id, player of players
+    for [x, y, id] in objects
       if not _.include client_ids, id
         @rootScene.addChild new Player("2:2:1:2004:21230:22480", id)
 
@@ -36,10 +34,10 @@ class MyGame extends enchant.Game
     @onload = => socket.on 'getPlayerData', (@playerData) =>
       @rootScene.addChild new Player("2:2:1:2004:21230:22480", @playerData.player_id)
 
-      socket.on 'update', (serverState) =>
-        @syncObject(serverState)
+      socket.on 'update', ({o}) =>
+        @syncObject(o)
         # 全オブジェクトの状態を更新
-        for id, {x, y} of serverState._players
+        for [x, y, id] in o
           object = _.find @rootScene.childNodes, (obj) -> obj.player_id is id
           object.moveTo x, y
 
