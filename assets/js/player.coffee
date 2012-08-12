@@ -27,3 +27,11 @@ class Nmmo.Player extends enchant.Avatar
       @_last.x = @x 
       @_last.y = @y
 
+  compless: ->
+    [@x, @y, @player_id, @avatar]
+
+  decode: ([x, y, id, avatar])->
+    @x = x
+    @y = y
+    @player_id = id
+    @avatar = avatar

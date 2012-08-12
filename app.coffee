@@ -1,4 +1,3 @@
-#StateMachine
 World = require './lib/world'
 world = new World
 
@@ -47,7 +46,7 @@ entrance.on 'connection', (socket) ->
   # init
   player_id = socket.id
   world.login player_id
-  socket.emit 'getPlayerData', player_id: player_id
+  socket.emit 'getPlayerData', player_id
 
   # on client updating key
   socket.on 'key', ({key, state}) ->

@@ -31,7 +31,6 @@ class World
       setTimeout(mainloop, 1000/@FPS);
 
   compless: ->
-    # [[x, y, id]...]
-    o: ([x, y, id] for id, {x, y} of @_players)
+    o: ([x, y, id, avatar] for id, {x, y, avatar} of @_players)
 
 module.exports = World
