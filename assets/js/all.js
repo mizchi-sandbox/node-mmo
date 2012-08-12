@@ -3,4 +3,4 @@
 //= require_tree ./utils
 //= require game
 //= require player
-//= require walker
+//= require client
