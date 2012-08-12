@@ -1,43 +1,60 @@
-
 enchant()
-class SampleGame extends enchant.Game
-  constructor : ->
-    super 320, 320
+enchant.EventTarget::on = -> @addEventListener arguments...
+
+class MyGame extends enchant.Game
+  constructor: (socket) ->
+    super 320, 240
     @fps = 30
-    SampleGame.game = @
-    @preload "miku.gif"
+    MyGame.game = @
+
+    @scene = @rootScene
+    @scene.backgroundColor = 'black' 
+
+    @preload "chara1.png"
     @onload = ->
       @rootScene.addChild new Player(100, 100)
     @start()
 
-class Player extends Sprite
-  constructor: (x, y) ->
-    super 44, 32
-    @x = x
-    @y = y
-    game = SampleGame.game
-    @image = game.assets['miku.gif']
-    @addEventListener 'enterframe', ->
-      if game.input.up
-        @y -= 5
-      else if game.input.down
-        @y += 5
-      if game.input.left
-        @x -= 5
-      else if game.input.right
-        @x += 5
+    @on 'enterframe', =>
+      if @input.up
+        socket.emit 'key', key: 'up', state: true
+      if @input.down
+        socket.emit 'key', key: 'down', state: true
+      if @input.left
+        socket.emit 'key', key: 'left', state: true
+      if @input.right
+        socket.emit 'key', key: 'right', state: true
+
+
+
+class Player extends enchant.Sprite
+  constructor: (@x, @y, @_id) ->
+    super 32, 32
+    game = MyGame.game
+    @image = game.assets['chara1.png']
+    @addEventListener 'enterframe', =>
 
 $ ->
   socket = io.connect '/entrance'
-  game = new MMOGame
-  window.playerData = null
+  window.game = new MyGame socket
+  playerData = {}
 
   #listener
   socket.on 'getPlayerData', (data) ->
+    console.log '=======', data
     playerData = data
 
   socket.on 'update', (worldState) ->
-    game.render(worldState)
+    player_object = game.rootScene.childNodes[0]
+    for id, {x, y, id} of worldState._players
+      if id is playerData.player_id
+        player_object.x = x
+        player_object.y = y
+      # else
+      #   console.log 'other', x, y
+
+    player = game.rootScene.childNodes[0]
+    # game.render(worldState)
 
   #send key logic
   KEYCODES =
@@ -53,4 +70,3 @@ $ ->
 
   $(window).keydown sendKey(true)
   $(window).keyup sendKey(false)
-  # new SampleGame()

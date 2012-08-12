@@ -33,8 +33,6 @@ console.log('server start:', 5000)
 io = require('socket.io').listen(app)
 cookie = require 'cookie'
 
-console.log require('connect').utils
-
 io.set 'log level', 1
 io.set 'authorization', (handshake, callback) ->
   decoded_cookie = cookie.parse handshake.headers.cookie
