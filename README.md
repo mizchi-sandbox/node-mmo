@@ -12,4 +12,4 @@ npm install
 coffee app.coffee
 ```
 
-[screenshot](https://raw.github.com/mizchi/node-mmo/master/screenshot.png)
+![screenshot](https://raw.github.com/mizchi/node-mmo/master/screenshot.png)
