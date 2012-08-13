@@ -26,11 +26,11 @@ class World
   start: (emitter) ->
     do mainloop = =>
       for id, player of @_players
-        player.move()
+        player.update()
       emitter @compless()
       setTimeout(mainloop, 1000/@FPS);
 
   compless: ->
-    o: ([x, y, user_id, avatar] for user_id, {x, y, avatar} of @_players)
+    o: (player.encode() for user_id, player of @_players)
 
 module.exports = World

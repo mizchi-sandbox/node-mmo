@@ -1,4 +1,5 @@
 {abs} = Math
+
 class Nmmo.Player extends enchant.Avatar
   constructor: (avatar, @user_id) ->
     super avatar
@@ -13,25 +14,12 @@ class Nmmo.Player extends enchant.Avatar
       y: 0
 
     @on 'enterframe', =>
-      diff_x = @x - @_last.x
-      diff_y = @y - @_last.y
-      if diff_x is 0 and diff_y is 0
-        @action = 'stop'
-      else
-        @action = 'run'
-        if diff_x < 0
-          @scaleX = + abs(@scaleX)
-        if diff_x > 0
-          @scaleX = - abs(@scaleX)
+      @scaleX = @dir * abs(@scaleX)
 
-      @_last.x = @x 
-      @_last.y = @y
-
-  compless: ->
-    [@x, @y, @user_id, @avatar]
-
-  decode: ([x, y, id, avatar])->
+  decode: ([x, y, id, avatar, action, dir])->
     @x = x
     @y = y
     @user_id = id
     @avatar = avatar
+    @action = action
+    @dir = dir

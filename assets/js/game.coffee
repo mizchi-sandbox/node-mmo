@@ -1,20 +1,28 @@
 class Nmmo.Game extends enchant.Game
   constructor: ->
     window.game = @
+    # init params
     super 320, 240
     @fps = 15
-    # @scene.backgroundColor = 'black'
-    @rootScene.backgroundColor="#888888"
-
-    @bg = new AvatarBG(0)
-    @bg.y = 50
-    @rootScene.addChild(@bg)
-
+    @keybind 'Z'.charCodeAt(0), 'a'
+    @keybind 'X'.charCodeAt(0), 'b'
     @preload [
       "avatarBg1.png"
       "avatarBg2.png"
       "avatarBg3.png"
     ]
+
+    # logic
+    @rootScene.backgroundColor = 'black'
+    @rootScene.addChild _.tap new enchant.Label, (label) =>
+      label.text = "MyTest"
+      label.color = "white"
+
+  bindIO: (socket) ->
+    socket.on 'getPlayerData', (@playerData) =>
+      socket.on 'update', ({o}) =>
+        @sync(o)
+        @update(o)
 
   sync: (objects) ->
     client_ids = (obj.user_id for obj in game.rootScene.childNodes)
@@ -31,18 +39,9 @@ class Nmmo.Game extends enchant.Game
         @rootScene.removeChild node
 
   update: (objects) ->
-    for [x, y, id] in objects
-      object = _.find @rootScene.childNodes, (obj) -> obj.user_id is id
-      object.moveTo x, y
-      @bg.scroll x
-
-  bindSocket: (socket, onEnterFrame) ->
-    @playerData = {}
-    @onload = => socket.on 'getPlayerData', (@playerData) =>
-      socket.on 'update', ({o}) =>
-        @sync(o)
-        @update(o)
-
-    @on 'enterframe', =>
-      onEnterFrame(@input)
+    for obj in objects
+      [x ,y, user_id] = obj
+      player = _.find @rootScene.childNodes, (node) ->
+        node.user_id is user_id
+      player.decode(obj)
 
