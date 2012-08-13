@@ -3,7 +3,7 @@ class Nmmo.Game extends enchant.Game
     window.game = @
     # init params
     super 320, 240
-    @fps = 15
+    @fps = 30
     @keybind 'Z'.charCodeAt(0), 'a'
     @keybind 'X'.charCodeAt(0), 'b'
     @preload [
