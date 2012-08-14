@@ -1,2 +1,3 @@
-window.Nmmo = {}
+window.Nmmo =
+  Utils: {}
 enchant()

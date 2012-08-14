@@ -4,3 +4,4 @@
 //= require game
 //= require player
 //= require client
+//= require shared/utils
