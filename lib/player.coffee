@@ -19,22 +19,25 @@ class Player extends BattleEntity
     @on 'update', @onUpdate
     @on 'attacked', @onAttacked
 
-  isPushed: (key_name) -> @_keys[key_name] is true
-
   onUpdate: ->
     super()
     @move()
-    @setAvatarAction()
+    @updateAvatarAction()
 
     # Aボタンを押していれば攻撃
     if @canAction() and @isPushed 'a'
       {players} = @world.getObjectsByPlayer(@)
-      for player in players when player isnt @
-        @attack player
+      # TODO ターゲット機構をつける
+      target = _.first (players.filter (p) => p isnt @ and p.isAlive())
+      if target
+        @attack target
+
+  checkStatus: ->
+    if @hp < 0 then @hp = 0
 
   onAttacked: (enemy) ->
     @hp -= 30
-    if @hp < 0 then @hp = 0
+    @checkStatus()
     @addStunValue ~~(@world.FPS / 2)
 
   attack: (enemy) ->
@@ -51,8 +54,17 @@ class Player extends BattleEntity
       if @_keys.left  then @x -= @move_speed
     # TODO 当たり判定
 
+  updateKey: (key, state) ->
+    @_keys[key] = state
+
+  isPushed: (key_name) ->
+    @_keys[key_name] is true
+
+  encode: ->
+    [@x, @y, @user_id, @avatar, @action, @dir]
+
   # set @action
-  setAvatarAction: ->
+  updateAvatarAction: ->
     # 死
     if @isDead()
       @action = 'dead'
@@ -84,11 +96,5 @@ class Player extends BattleEntity
           -1
         else
           @dir
-
-  updateKey: (key, state) ->
-    @_keys[key] = state
-
-  encode: ->
-    [@x, @y, @user_id, @avatar, @action, @dir]
 
 module.exports = Player
