@@ -12,7 +12,7 @@ class BattleEntity extends Entity
     @move_speed = 3
 
     @HP = 100
-
+    @hp = 100
 
   onUpdate: ->
     @_saveLastState()
@@ -24,14 +24,12 @@ class BattleEntity extends Entity
   _saveLastState:->
     @_last = _.clone @
 
-  isMoved  : ->
-
   canAction: ->
-    @nextActionFrameCount <= 0 and not @isStunned()
+    @nextActionFrameCount <= 0 and not @isStunned() and @isAlive()
   isStunned: -> @stunnedFrameCount > 0
 
-  isAlive: ->
-  isDead: ->
+  isAlive: -> @hp > 0
+  isDead: -> not @isAlive()
 
 class Player extends BattleEntity
   constructor: (@world, @user_id) ->
@@ -62,6 +60,10 @@ class Player extends BattleEntity
         @attack player
 
   onAttacked: (enemy) ->
+    @hp -= 30
+    if @hp < 0 then @hp = 0
+    console.log @user_id, @hp
+
     @stunnedFrameCount = ~~(@world.FPS / 2)
 
   attack: (enemy) ->
@@ -81,8 +83,9 @@ class Player extends BattleEntity
 
   # set @action
   setAvatarAction: ->
-    diff_x = (@x - @_last.x)
-    diff_y = (@y - @_last.y)
+    if @isDead()
+      @action = 'dead'
+      return
 
     # ダメージを受けているときは硬直
     if @stunnedFrameCount > 0
@@ -95,7 +98,9 @@ class Player extends BattleEntity
       return
 
     # 立ち止まってる場合はstop
-    else if diff_x is 0 and diff_y is 0
+    diff_x = (@x - @_last.x)
+    diff_y = (@y - @_last.y)
+    if diff_x is 0 and diff_y is 0
       @action = 'stop'
 
     # 位置が変わった場合はrun
