@@ -14,7 +14,8 @@ class World extends Entity
 
   # return all objects in its sights
   getObjectsByPlayer: (player) ->
-    players: _.values(@_players)
+    players: (_.values(@_players)).filter (other) =>
+      player.distance(other) < 50
 
   # cache and return player
   login: (user_id) ->
