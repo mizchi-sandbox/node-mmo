@@ -21,8 +21,11 @@ class BattleEntity extends Entity
     else if @nextActionFrameCount > 0
       @nextActionFrameCount--
 
-  _saveLastState:->
-    @_last = _.clone @
+  addStunValue: (val) ->
+    @stunnedFrameCount += val
+
+  addActionCost: (val) ->
+    @nextActionFrameCount += val
 
   canAction: ->
     @nextActionFrameCount <= 0 and not @isStunned() and @isAlive()
@@ -30,6 +33,8 @@ class BattleEntity extends Entity
 
   isAlive: -> @hp > 0
   isDead: -> not @isAlive()
+
+  _saveLastState:-> @_last = _.clone @
 
 class Player extends BattleEntity
   constructor: (@world, @user_id) ->
@@ -48,13 +53,15 @@ class Player extends BattleEntity
     @on 'update', @onUpdate
     @on 'attacked', @onAttacked
 
+  isPushed: (key_name) -> @_keys[key_name] is true
+
   onUpdate: ->
     super()
     @move()
     @setAvatarAction()
 
     # Aボタンを押していれば攻撃
-    if @canAction() and @_keys.a is true
+    if @canAction() and @isPushed 'a'
       {players} = @world.getObjectsByPlayer(@)
       for player in players when player isnt @
         @attack player
@@ -62,13 +69,14 @@ class Player extends BattleEntity
   onAttacked: (enemy) ->
     @hp -= 30
     if @hp < 0 then @hp = 0
-    console.log @user_id, @hp
-
-    @stunnedFrameCount = ~~(@world.FPS / 2)
+    @addStunValue ~~(@world.FPS / 2)
+    # @stunndFrameCount = @world.FPS * 1
 
   attack: (enemy) ->
     console.log 'attacking:', @user_id, '->' , enemy.user_id
-    @nextActionFrameCount = @world.FPS * 1
+    @addActionCost @world.FPS * 1
+    # @nextActionFrameCount = @world.FPS * 1
+
     @action = 'attack'
     enemy.emit 'attacked', @
 
