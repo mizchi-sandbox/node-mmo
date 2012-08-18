@@ -47,27 +47,51 @@ class Player extends BattleEntity
       a: false
       b: false
 
-    @on 'update', @update
+    @on 'update', @onUpdate
+    @on 'attacked', @onAttacked
 
-  update: ->
-    last_x = @x
-    last_y = @y
-
+  onUpdate: ->
+    super()
     @move()
-    @setAction (@x - last_x), (@y - last_y)
+    @setAvatarAction()
+
+    # Aボタンを押していれば攻撃
+    if @canAction() and @_keys.a is true
+      {players} = @world.getObjectsByPlayer(@)
+      for player in players when player isnt @
+        @attack player
+
+  onAttacked: (enemy) ->
+    @stunnedFrameCount = ~~(@world.FPS / 2)
+
+  attack: (enemy) ->
+    console.log 'attacking:', @user_id, '->' , enemy.user_id
+    @nextActionFrameCount = @world.FPS * 1
+    @action = 'attack'
+    enemy.emit 'attacked', @
 
   move: ->
-    # move actually
-    if @_keys.up    then @y -= @move_speed
-    if @_keys.down  then @y += @move_speed
-    if @_keys.right then @x += @move_speed
-    if @_keys.left  then @x -= @move_speed
+    # 攻撃中、もしくはスタン中は動けない
+    if @canAction()
+      # move actually
+      if @_keys.up    then @y -= @move_speed
+      if @_keys.down  then @y += @move_speed
+      if @_keys.right then @x += @move_speed
+      if @_keys.left  then @x -= @move_speed
 
   # set @action
-  setAction: (diff_x, diff_y) ->
-    # Aボタンを押してる時は attack
-    if @_keys.a
-      @action = 'attack'
+  setAvatarAction: ->
+    diff_x = (@x - @_last.x)
+    diff_y = (@y - @_last.y)
+
+    # ダメージを受けているときは硬直
+    if @stunnedFrameCount > 0
+      @action = 'damage'
+      return
+
+    # アニメーション中は同じアクションを継続
+    if @nextActionFrameCount > 0
+      @action = @action
       return
 
     # 立ち止まってる場合はstop
@@ -86,7 +110,6 @@ class Player extends BattleEntity
           @dir
 
   updateKey: (key, state) ->
-    console.log key, state
     @_keys[key] = state
 
   encode: ->
