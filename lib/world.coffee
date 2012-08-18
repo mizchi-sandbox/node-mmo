@@ -1,6 +1,7 @@
-Player = require('./player');
+Entity = require './entity'
+Player = require './player'
 
-class World
+class World extends Entity
   constructor: ->
     @_players = {}
     @FPS = 15
@@ -26,7 +27,7 @@ class World
   start: (emitter) ->
     do mainloop = =>
       for id, player of @_players
-        player.update()
+        player.emit 'update'
       emitter @compless()
       setTimeout(mainloop, 1000/@FPS);
 

@@ -1,4 +1,6 @@
-class Player
+Entity = require './entity'
+
+class Player extends Entity
   constructor: (@user_id) ->
     @x = ~~(Math.random()*200)
     @y = ~~(Math.random()*200)
@@ -12,6 +14,8 @@ class Player
       left : false
       a: false
       b: false
+
+    @on 'update', @update
 
   update: ->
     last_x = @x
