@@ -1,3 +1,5 @@
+_ = require 'underscore'
+
 Entity = require './entity'
 Player = require './player'
 
@@ -10,9 +12,13 @@ class World extends Entity
   getPlayer: (user_id) ->
     @_players[user_id]
 
+  # return all objects in its sights
+  getObjectsByPlayer: (player) ->
+    players: _.values(@_players)
+
   # cache and return player
   login: (user_id) ->
-    @_players[user_id] = new Player(user_id)
+    @_players[user_id] = new Player @, user_id
 
   # delete cache
   logout: (user_id) ->
