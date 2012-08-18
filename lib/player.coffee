@@ -1,40 +1,6 @@
 _ = require 'underscore'
 
-Entity = require './entity'
-
-class BattleEntity extends Entity
-  constructor: ->
-    @x = 0
-    @y = 0
-    @nextActionFrameCount  = 0 # 0なら行動可。毎フレーム減少
-    @stunnedFrameCount = 0 # 0なら行動可。毎フレーム減少
-    @dir = 1 # 右
-    @move_speed = 3
-
-    @HP = 100
-    @hp = 100
-
-  onUpdate: ->
-    @_saveLastState()
-    if @stunnedFrameCount > 0
-      @stunnedFrameCount--
-    else if @nextActionFrameCount > 0
-      @nextActionFrameCount--
-
-  addStunValue: (val) ->
-    @stunnedFrameCount += val
-
-  addActionCost: (val) ->
-    @nextActionFrameCount += val
-
-  canAction: ->
-    @nextActionFrameCount <= 0 and not @isStunned() and @isAlive()
-  isStunned: -> @stunnedFrameCount > 0
-
-  isAlive: -> @hp > 0
-  isDead: -> not @isAlive()
-
-  _saveLastState:-> @_last = _.clone @
+BattleEntity = require './battle_entity'
 
 class Player extends BattleEntity
   constructor: (@world, @user_id) ->
