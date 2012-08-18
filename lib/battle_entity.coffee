@@ -21,6 +21,9 @@ class BattleEntity extends Entity
     else if @_nextActionFrameCount > 0
       @_nextActionFrameCount--
 
+  distance: (other) ->
+    abs(@x - other.x) + abs(@y - other.y)
+
   addStunValue: (val) ->
     @_stunnedFrameCount += val
 
