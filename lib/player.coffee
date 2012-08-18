@@ -25,12 +25,11 @@ class Player extends BattleEntity
     @updateAvatarAction()
 
     # Aボタンを押していれば攻撃
-    if @canAction() and @isPushed 'a'
+    if @canAction() and @isPushed('a')
       {players} = @world.getObjectsByPlayer(@)
       # TODO ターゲット機構をつける
-      target = _.first (players.filter (p) => p isnt @ and p.isAlive())
-      if target
-        @attack target
+      target = _.first players.filter (p) => p isnt @ and p.isAlive()
+      if target? then @attack target
 
   checkStatus: ->
     if @hp < 0 then @hp = 0
