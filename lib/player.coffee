@@ -1,12 +1,44 @@
+_ = require 'underscore'
+
 Entity = require './entity'
 
-class Player extends Entity
-  constructor: (@user_id) ->
+class BattleEntity extends Entity
+  constructor: ->
+    @x = 0
+    @y = 0
+    @nextActionFrameCount  = 0 # 0なら行動可。毎フレーム減少
+    @stunnedFrameCount = 0 # 0なら行動可。毎フレーム減少
+    @dir = 1 # 右
+    @move_speed = 3
+
+    @HP = 100
+
+
+  onUpdate: ->
+    @_saveLastState()
+    if @stunnedFrameCount > 0
+      @stunnedFrameCount--
+    else if @nextActionFrameCount > 0
+      @nextActionFrameCount--
+
+  _saveLastState:->
+    @_last = _.clone @
+
+  isMoved  : ->
+
+  canAction: ->
+    @nextActionFrameCount <= 0 and not @isStunned()
+  isStunned: -> @stunnedFrameCount > 0
+
+  isAlive: ->
+  isDead: ->
+
+class Player extends BattleEntity
+  constructor: (@world, @user_id) ->
+    super()
     @x = ~~(Math.random()*200)
     @y = ~~(Math.random()*200)
-    @dir = 1 # 右
     @avatar = "1:10:0:2019:2105:2210"
-    @move_speed = 3
     @_keys =
       up   : false
       down : false
