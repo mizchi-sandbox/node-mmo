@@ -1,5 +1,6 @@
 {abs, PI} = Math
 
+# プレーヤーの状態を表示するためのラベルを生成するクラス
 class PlayerLabel extends enchant.Label
   constructor: (@player) ->
     super()
@@ -22,6 +23,7 @@ class PlayerLabel extends enchant.Label
     percent = ~~(@player.hp/@player.HP * 100)
     "#{percent}%"
 
+# プレーヤーのアバターを管理するクラス
 class PlayerAvatar extends enchant.Avatar
   constructor: (avatar) ->
     super avatar
@@ -32,7 +34,8 @@ class PlayerAvatar extends enchant.Avatar
     @x = - ~~(@width / 2)
     @y = - ~~(@height / 2)
 
-class PlayerCircle extends enchant.Sprite
+# プレーヤーの残りHPを表示するクラス。操作プレーヤーのみ表示。
+class PlayerHPGauge extends enchant.Sprite
   constructor: (@player) ->
     super game.width, game.height
     @surface = new enchant.Surface game.width, game.height
@@ -46,12 +49,15 @@ class PlayerCircle extends enchant.Sprite
 
     @on 'enterframe', =>
       current_hp_rate = @getHPrate()
+      # もし前回と今回の残HP率が異なるなら再描画
       if @last_hp_rate isnt current_hp_rate
         @last_hp_rate = current_hp_rate
         @renderHPBar(current_hp_rate)
 
+  # 残HP率を取得
   getHPrate: -> @player.hp/@player.HP
 
+  # HPバーを表示
   renderHPBar: (hp_rate) ->
     @surface.context.lineWidth = @lineWidth
 
@@ -64,6 +70,7 @@ class PlayerCircle extends enchant.Sprite
     @image = @surface
     @opacity = 0.6
 
+  # canvasのarcをラップして円を書くメソッド
   drawArc: (ctx, start, end, color, size = 4, vec = true)->
     ctx.lineWidth = size
     ctx.beginPath()
@@ -75,6 +82,7 @@ class PlayerCircle extends enchant.Sprite
     ctx.stroke()
 
 
+# 複数のプレーヤーパーツを束ねて表示するPlayerクラス
 class Nmmo.Player extends enchant.Group
   constructor: (avatar, @user_id) ->
     @game = enchant.Game.instance
@@ -92,9 +100,8 @@ class Nmmo.Player extends enchant.Group
     @addChild @label
 
     if @isControlled()
-      # サークル
-      @circle = new PlayerCircle @
-      @addChild @circle
+      @gauge = new PlayerHPGauge @
+      @addChild @gauge
 
 
     @on 'enterframe', =>

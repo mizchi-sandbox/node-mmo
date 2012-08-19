@@ -86,7 +86,7 @@ class Player extends BattleEntity
   isPushed: (key_name) ->
     @_keys[key_name] is true
 
-  # set @action
+  # set avatar action
   updateAvatarAction: ->
     # 死
     if @isDead()
