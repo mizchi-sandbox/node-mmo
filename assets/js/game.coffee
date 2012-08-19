@@ -47,6 +47,10 @@ class Nmmo.Game extends enchant.Game
       unless node.user_id in server_ids
         @players.removeChild node
 
+    # y軸でソート
+    @players.childNodes = _.sortBy @players.childNodes,
+      (p) -> p.childNodes[0]._element.style.zIndex = p.y
+
   update: (objects) ->
     for obj in objects
       decoded = decodeObject(obj)

@@ -1,6 +1,7 @@
 require 'coffee-script'
 require 'livescript'
 global <<< require 'prelude-ls'
+global._ = require \underscore
 
 World = require './lib/world'
 world = new World
@@ -62,5 +63,6 @@ entrance.on 'connection', (socket) ->
     world.logout user_id
 
 # emit data by mainloop
-world.start (worldState) ->
+world.start (world-state) ->
   entrance.emit 'update', worldState
+
