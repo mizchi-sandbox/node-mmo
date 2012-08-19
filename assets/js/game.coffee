@@ -14,8 +14,10 @@ class Nmmo.Game extends enchant.Game
       "avatarBg3.png"
     ]
 
-    # logic
-    @rootScene.backgroundColor = 'black'
+  onload: ->
+    @rootScene.backgroundColor="#000000"
+    @rootScene.addChild new enchant.AvatarBG(2)
+
     @rootScene.addChild _.tap new enchant.Label, (label) =>
       label.text = "MyTest"
       label.color = "white"
