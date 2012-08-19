@@ -3,8 +3,14 @@
 class PlayerLabel extends enchant.Label
   constructor: (@player) ->
     super()
-    @color = 'white'
+    @color = @getColor()
     @on 'enterframe', @update
+    
+  getColor: ->
+    if @player.user_id is enchant.Game.instance.playerData
+      'green'
+    else
+      'white'
 
   update: ->
     @text = @createLabelText()
