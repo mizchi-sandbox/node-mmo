@@ -15,6 +15,12 @@ class Nmmo.Game extends enchant.Game
     ]
 
   onload: ->
+    @players  = new enchant.Group
+    @monsters = new enchant.Group
+    @objects  = new enchant.Group
+
+    @rootScene.addChild @players
+
     @rootScene.backgroundColor="#000000"
     @rootScene.addChild @bg = new enchant.AvatarBG(2)
     @rootScene.addChild _.tap new enchant.Label, (label) =>
@@ -30,23 +36,23 @@ class Nmmo.Game extends enchant.Game
         @update(o)
 
   sync: (objects) ->
-    client_ids = (obj.user_id for obj in game.rootScene.childNodes)
+    client_ids = (obj.user_id for obj in game.players.childNodes)
     server_ids = (id for [id] in objects)
 
     # オブジェクトの追加
     for obj in objects
       decoded = decodeObject obj
       unless decoded.user_id in client_ids
-        @rootScene.addChild new Nmmo.Player(decoded.avatar, decoded.user_id)
+        @players.addChild new Nmmo.Player(decoded.avatar, decoded.user_id)
 
     # オブジェクトの削除
-    for node in @rootScene.childNodes when node instanceof Nmmo.Player
+    for node in @players.childNodes
       unless node.user_id in server_ids
-        @rootScene.removeChild node
+        @players.removeChild node
 
   update: (objects) ->
     for obj in objects
       decoded = decodeObject(obj)
-      player = _.find @rootScene.childNodes, (node) ->
+      player = _.find @players.childNodes, (node) ->
         node.user_id is decoded.user_id
       player.update decoded
