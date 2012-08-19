@@ -1,3 +1,5 @@
+{decodeObject} = Nmmo.Utils
+
 class Nmmo.Game extends enchant.Game
   constructor: ->
     window.game = @
