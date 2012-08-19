@@ -6,13 +6,30 @@ exports.pm = =>
   unless (log_cnt++)%30
     console.log arguments...
 
-exports.encodeObject = ->
-exports.decodeObject = ([x, y, user_id, avatar, action, dir]) ->
-  x: x
-  y: y
-  dir: dir
-  user_id: user_id
-  avatar: avatar
-  action: action
+class Encrypter
+  constructor: (params_str) ->
+    @protocol_mapped_array = 
+      params_str
+      .replace(/\s/g, '')
+      .split(',')
 
-Nmmo.Utils = exports if window?
+  encode: (object) ->
+    for key, index in @protocol_mapped_array
+      object[key]
+
+  decode: (object_array) ->
+    retval = {}
+    for val, index in object_array
+      key = @protocol_mapped_array[index]
+      retval[key] = val
+    retval
+
+object_encrypter = new Encrypter 'x,y,user_id,avatar,action,dir'
+
+exports.encodeObject = -> object_encrypter.encode arguments...
+exports.decodeObject = -> object_encrypter.decode arguments...
+
+if window?
+  Nmmo.Utils = exports 
+else
+  module.exports = exports
