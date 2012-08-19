@@ -7,7 +7,7 @@ class Player extends BattleEntity
     super()
     @x = 0  + ~~(Math.random()*320)
     @y = 60 + ~~(Math.random()*100)
-    @avatar = "1:10:0:2019:2105:2210"
+
     @_keys =
       up   : false
       down : false
@@ -16,6 +16,11 @@ class Player extends BattleEntity
       a: false
       b: false
     @initStatus()
+
+    gender = ~~(Math.random()*2) + 1
+    hair = ~~(Math.random()*9) + 1
+    hair_color = ~~(Math.random()*6) 
+    @avatar = "#{gender}:#{hair}:#{hair_color}:2019:2105:0"
 
     @on 'update', @onUpdate
     @on 'attacked', @onAttacked
