@@ -5,8 +5,8 @@ BattleEntity = require './battle_entity'
 class Player extends BattleEntity
   constructor: (@world, @user_id) ->
     super()
-    @x = ~~(Math.random()*200)
-    @y = ~~(Math.random()*200)
+    @x = 0  + ~~(Math.random()*280)
+    @y = 30 + ~~(Math.random()*100)
     @avatar = "1:10:0:2019:2105:2210"
     @_keys =
       up   : false
@@ -47,11 +47,18 @@ class Player extends BattleEntity
 
   move: ->
     if @canAction()
-      if @_keys.up    then @y -= @move_speed
-      if @_keys.down  then @y += @move_speed
-      if @_keys.right then @x += @move_speed
-      if @_keys.left  then @x -= @move_speed
-    # TODO 当たり判定
+      nx = @x
+      ny = @y
+      if @_keys.up    then ny = @y - @move_speed
+      if @_keys.down  then ny = @y + @move_speed
+      if @_keys.right then nx = @x + @move_speed
+      if @_keys.left  then nx = @x - @move_speed
+
+      if 0 < nx < 280
+        @x = nx
+
+      if 30 < ny < 130
+        @y = ny
 
   updateKey: (key, state) ->
     @_keys[key] = state
