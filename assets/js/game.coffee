@@ -44,8 +44,7 @@ class Nmmo.Game extends enchant.Game
 
   update: (objects) ->
     for obj in objects
-      [x ,y, user_id] = obj
+      decoded = decodeObject(obj)
       player = _.find @rootScene.childNodes, (node) ->
-        node.user_id is user_id
-      player.decode(obj)
-
+        node.user_id is decoded.user_id
+      player.update decoded
