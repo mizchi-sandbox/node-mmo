@@ -28,17 +28,12 @@ class Nmmo.Player extends enchant.Avatar
     @scaleX = 0.5
     @scaleY = 0.5
 
-    @action = 'run'
-
-    @_last = 
-      x: 0
-      y: 0
-
     @on 'enterframe', =>
       @scaleX = @dir * abs(@scaleX)
 
     @label = new PlayerLabel @
     @game.rootScene.addChild @label
+
     @on 'removed', =>
       @scene.removeChild @label
 
