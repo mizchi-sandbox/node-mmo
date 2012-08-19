@@ -3,8 +3,9 @@ _ = require 'underscore'
 Entity = require './entity'
 Player = require './player'
 
-{encodeObject, 
- decodeObject
+{ 
+  encodeObject
+  decodeObject
 } = require '../shared/utils'
 
 class World extends Entity

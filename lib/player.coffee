@@ -59,9 +59,6 @@ class Player extends BattleEntity
   isPushed: (key_name) ->
     @_keys[key_name] is true
 
-  encode: ->
-    [@x, @y, @user_id, @avatar, @action, @dir]
-
   # set @action
   updateAvatarAction: ->
     # 死

@@ -30,12 +30,13 @@ class Nmmo.Game extends enchant.Game
 
   sync: (objects) ->
     client_ids = (obj.user_id for obj in game.rootScene.childNodes)
-    server_ids = (id for [__, __, id] in objects)
+    server_ids = (id for [id] in objects)
 
     # オブジェクトの追加
-    for [x, y, id, avatar] in objects
-      unless _.include client_ids, id
-        @rootScene.addChild new Nmmo.Player(avatar, id)
+    for obj in objects
+      decoded = decodeObject obj
+      unless decoded.user_id in client_ids
+        @rootScene.addChild new Nmmo.Player(decoded.avatar, decoded.user_id)
 
     # オブジェクトの削除
     for node in @rootScene.childNodes when node instanceof Nmmo.Player
