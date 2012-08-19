@@ -1,9 +1,11 @@
 _ = require 'underscore'
 
 Entity = require './entity'
+{abs} = Math
 
 class BattleEntity extends Entity
   constructor: ->
+    super()
     @x = 0
     @y = 0
     @_nextActionFrameCount  = 0 # 0なら行動可。毎フレーム減少
