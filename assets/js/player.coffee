@@ -14,38 +14,39 @@ class PlayerLabel extends enchant.Label
 
   update: ->
     @text = @createLabelText()
-    @x = @player.x
-    @y = @player.y
 
   createLabelText: ->
     "#{@player.x}:#{@player.y}"
 
-class Nmmo.Player extends enchant.Avatar
-  constructor: (avatar, @user_id) ->
+class Nmmo.PlayerAvatar extends enchant.Avatar
+  constructor: (avatar) ->
     super avatar
     @game = enchant.Game.instance
-
     @scaleX = 0.5
     @scaleY = 0.5
 
-    @on 'enterframe', =>
-      @scaleX = @dir * abs(@scaleX)
-      if @user_id is enchant.Game.instance.player_id
-        @game.bg.scroll @x
+class Nmmo.Player extends enchant.Group
+  constructor: (avatar, @user_id) ->
+    @game = enchant.Game.instance
+    super arguments...
+    @avatar = new Nmmo.PlayerAvatar avatar, @user_id
+    @addChild @avatar
 
     @label = new PlayerLabel @
-    @game.rootScene.addChild @label
+    @addChild @label
 
-    @on 'removed', =>
-      @scene.removeChild @label
+    @on 'enterframe', =>
+      @avatar.scaleX = @avatar.dir * abs(@avatar.scaleX)
+      # if @user_id is @game.player_id
+      #   @game.bg.scroll @x
 
   update: ({
     x, y, user_id,
     avatar, action, dir
   }) ->
-    @x = x
-    @y = y
     @user_id = user_id
-    @avatar = avatar
-    @action = action
-    @dir = dir
+    @moveTo x, y
+
+    @avatar.avatar = avatar
+    @avatar.action = action
+    @avatar.dir = dir
