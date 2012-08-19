@@ -16,14 +16,15 @@ class Nmmo.Game extends enchant.Game
 
   onload: ->
     @rootScene.backgroundColor="#000000"
-    @rootScene.addChild new enchant.AvatarBG(2)
-
+    @rootScene.addChild @bg = new enchant.AvatarBG(2)
     @rootScene.addChild _.tap new enchant.Label, (label) =>
-      label.text = "MyTest"
+      label.text = "Nmmo Test Scene"
       label.color = "white"
 
+    # @rootScene.addChild _.tap new enchant.Label, (label) =>
+
   bindIO: (socket) ->
-    socket.on 'getPlayerData', (@playerData) =>
+    socket.on 'getPlayerData', (@player_id) =>
       socket.on 'update', ({o}) =>
         @sync(o)
         @update(o)

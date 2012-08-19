@@ -7,7 +7,7 @@ class PlayerLabel extends enchant.Label
     @on 'enterframe', @update
     
   getColor: ->
-    if @player.user_id is enchant.Game.instance.playerData
+    if @player.user_id is enchant.Game.instance.player_id
       'green'
     else
       'white'
@@ -30,6 +30,8 @@ class Nmmo.Player extends enchant.Avatar
 
     @on 'enterframe', =>
       @scaleX = @dir * abs(@scaleX)
+      if @user_id is enchant.Game.instance.player_id
+        @game.bg.scroll @x
 
     @label = new PlayerLabel @
     @game.rootScene.addChild @label
