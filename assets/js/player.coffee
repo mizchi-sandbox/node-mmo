@@ -37,8 +37,6 @@ class Nmmo.Player extends enchant.Group
 
     @on 'enterframe', =>
       @avatar.scaleX = @avatar.dir * abs(@avatar.scaleX)
-      # if @user_id is @game.player_id
-      #   @game.bg.scroll @x
 
   update: ({
     x, y, user_id,
