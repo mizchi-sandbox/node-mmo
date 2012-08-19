@@ -24,7 +24,7 @@ class Encrypter
       retval[key] = val
     retval
 
-object_encrypter = new Encrypter 'user_id,x,y,avatar,action,dir'
+object_encrypter = new Encrypter 'user_id,x,y,avatar,action,dir,HP,hp'
 
 exports.encodeObject = -> object_encrypter.encode arguments...
 exports.decodeObject = -> object_encrypter.decode arguments...

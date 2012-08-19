@@ -15,14 +15,29 @@ class Player extends BattleEntity
       left : false
       a: false
       b: false
+    @initStatus()
 
     @on 'update', @onUpdate
     @on 'attacked', @onAttacked
+
+  initStatus: ->
+    @x = 0  + ~~(Math.random()*320)
+    @y = 60 + ~~(Math.random()*100)
+    @hp = @HP
 
   onUpdate: ->
     super()
     @move()
     @updateAvatarAction()
+
+    if @isDead()
+      @_dead_count ?= 60
+      @_dead_count--
+      if @_dead_count is 0
+        delete @_dead_count
+        # 復活処理
+        @initStatus()
+
 
     # Aボタンを押していれば攻撃
     if @canAction() and @isPushed('a')
@@ -35,7 +50,7 @@ class Player extends BattleEntity
     if @hp < 0 then @hp = 0
 
   onAttacked: (enemy) ->
-    @hp -= 30
+    @hp -= ~~(20 * Math.random()) + 10
     @checkStatus()
     @addStunValue ~~(@world.FPS / 2)
 

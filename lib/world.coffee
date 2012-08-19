@@ -39,10 +39,14 @@ class World extends Entity
   # start mainloop
   start: (emitter) ->
     do mainloop = =>
-      for id, player of @_players
-        player.emit 'update'
+      @update()
       emitter @compless()
       setTimeout mainloop, 1000/@FPS
+
+  update: ->
+    for id, player of @_players
+      player.emit 'update'
+
 
   compless: ->
     o: (
