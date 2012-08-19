@@ -18,21 +18,39 @@ class PlayerLabel extends enchant.Label
   createLabelText: ->
     "#{@player.x}:#{@player.y}"
 
-class Nmmo.PlayerAvatar extends enchant.Avatar
+class PlayerAvatar extends enchant.Avatar
   constructor: (avatar) ->
     super avatar
     @game = enchant.Game.instance
     @scaleX = 0.5
     @scaleY = 0.5
 
+    @x = - ~~(@width / 2)
+    @y = - ~~(@height / 2)
+
+class PlayerCircle extends enchant.Surface
+  constructor: ->
+    super arguments...
+    @context.beginPath()
+    @context.arc(50, 50, 45, 0, Math.PI*2, false);
+    @context.strokeStyle = 'green'
+    @context.stroke()
+    @context.lineWidth = 5;
+
 class Nmmo.Player extends enchant.Group
   constructor: (avatar, @user_id) ->
     @game = enchant.Game.instance
     super arguments...
-    @avatar = new Nmmo.PlayerAvatar avatar, @user_id
-    @addChild @avatar
 
-    @label = new PlayerLabel @
+    # 各オブジェクト
+    @avatar = new PlayerAvatar avatar
+    @label  = new PlayerLabel @
+
+    @circle = new enchant.Sprite @game.width, @game.height
+    @circle.image = new PlayerCircle @game.width, @game.height
+    @addChild @circle
+
+    @addChild @avatar
     @addChild @label
 
     @on 'enterframe', =>
