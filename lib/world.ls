@@ -1,7 +1,7 @@
 _ = require 'underscore'
 
-Entity = require './entity'
-Player = require './player'
+Entity = require \./entity
+Player = require \./player
 
 { 
   encodeObject
@@ -9,7 +9,7 @@ Player = require './player'
 } = require '../shared/utils'
 
 class World extends Entity
-  constructor: ->
+  ->
     @_players = {}
     @FPS = 15
 
@@ -20,9 +20,7 @@ class World extends Entity
   # return all objects in its sights
   getObjectsByPlayer: (player) ->
     # TODO 攻撃レンジは武器に依存
-    players: (_.values(@_players)).filter (other) =>
-      player.distance(other) < 50
-
+    players: (filter (~> player.distance(it) < 50), (values @_players))
   # cache and return player
   login: (user_id) ->
     @_players[user_id] = new Player @, user_id
@@ -38,9 +36,9 @@ class World extends Entity
 
   # start mainloop
   start: (emitter) ->
-    do mainloop = =>
-      @update()
-      emitter @compless()
+    do mainloop = ~>
+      @update!
+      emitter @compless!
       setTimeout mainloop, 1000/@FPS
 
   update: ->
@@ -49,8 +47,6 @@ class World extends Entity
 
 
   compless: ->
-    o: (
-      (encodeObject player) for user_id, player of @_players
-    )
+    o: map encodeObject, (values @_players)
 
 module.exports = World

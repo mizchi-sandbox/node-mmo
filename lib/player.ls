@@ -1,9 +1,9 @@
-_ = require 'underscore'
+_ = require \underscore
 
-BattleEntity = require './battle_entity'
+BattleEntity = require \./battle_entity
 
 class Player extends BattleEntity
-  constructor: (@world, @user_id) ->
+  (@world, @user_id) ->
     super()
     @x = 0  + ~~(Math.random()*320)
     @y = 60 + ~~(Math.random()*100)
@@ -17,23 +17,23 @@ class Player extends BattleEntity
       b: false
     @initStatus()
 
-    gender = ~~(Math.random()*2) + 1
-    hair = ~~(Math.random()*9) + 1
-    hair_color = ~~(Math.random()*6) 
+    gender = ~~(Math.random!*2) + 1
+    hair = ~~(Math.random!*9) + 1
+    hair_color = ~~(Math.random!*6) 
     @avatar = "#{gender}:#{hair}:#{hair_color}:2019:2105:0"
 
-    @on 'update', @onUpdate
-    @on 'attacked', @onAttacked
+    @on 'update', @on-update
+    @on 'attacked', @on-attacked
 
-  initStatus: ->
-    @x = 0  + ~~(Math.random()*320)
-    @y = 60 + ~~(Math.random()*100)
+  init-status: ->
+    @x = 0  + ~~(Math.random!*320)
+    @y = 60 + ~~(Math.random!*100)
     @hp = @HP
 
-  onUpdate: ->
+  on-update: ->
     super()
     @move()
-    @updateAvatarAction()
+    @update-avatar-action()
 
     if @isDead()
       @_dead_count ?= 60
@@ -43,30 +43,29 @@ class Player extends BattleEntity
         # 復活処理
         @initStatus()
 
-
     # Aボタンを押していれば攻撃
-    if @canAction() and @isPushed('a')
-      {players} = @world.getObjectsByPlayer(@)
+    if @can-action() and @is-pushed \a
+      {players} = @world.get-objects-by-player(@)
       # TODO ターゲット機構をつける
-      target = _.first players.filter (p) => p isnt @ and p.isAlive()
+      target = first (filter (~> it isnt @ and it.isAlive!), players)
       if target? then @attack target
 
-  checkStatus: ->
+  check-status: ->
     if @hp < 0 then @hp = 0
 
-  onAttacked: (enemy) ->
-    @hp -= ~~(20 * Math.random()) + 10
-    @checkStatus()
+  on-attacked: (enemy) ->
+    @hp -= ~~(20 * Math.random!) + 10
+    @checkStatus!
     @addStunValue ~~(@world.FPS / 2)
 
   attack: (enemy) ->
-    console.log 'attacking:', @user_id, '->' , enemy.user_id
-    @addActionCost @world.FPS * 1
-    @action = 'attack'
-    enemy.emit 'attacked', @
+    console.log \attacking: , @user_id, '->' , enemy.user_id
+    @add-action-cost @world.FPS * 1
+    @action = \attack
+    enemy.emit \attacked , @
 
   move: ->
-    if @canAction()
+    if @can-action!
       nx = @x
       ny = @y
       if @_keys.up    then ny = @y - @move_speed
@@ -80,26 +79,26 @@ class Player extends BattleEntity
       if 60 < ny < 160
         @y = ny
 
-  updateKey: (key, state) ->
+  update-key: (key, state) ->
     @_keys[key] = state
 
-  isPushed: (key_name) ->
+  is-pushed: (key_name) ->
     @_keys[key_name] is true
 
   # set avatar action
-  updateAvatarAction: ->
+  update-avatar-action: ->
     # 死
-    if @isDead()
-      @action = 'dead'
+    if @is-dead!
+      @action = \dead
       return
 
     # スタン
-    if @isStunned()
-      @action = 'damage'
+    if @is-stunned!
+      @action = \damage
       return
 
     # 他アニメーションは継続
-    unless @canAction()
+    unless @can-action!
       @action = @action
       return
 
@@ -107,10 +106,10 @@ class Player extends BattleEntity
     dx = (@x - @_last.x)
     dy = (@y - @_last.y)
     if dx is 0 and dy is 0
-      @action = 'stop'
+      @action = \stop
     else
       # 位置が変わった場合はrun
-      @action = 'run'
+      @action = \run
       # 右へ進んだか、左へ進んだか
       @dir = 
         if dx < 0

@@ -1,8 +1,8 @@
-{EventEmitter} = require('events')
+{EventEmitter} = require 'events'
 {abs} = Math
 
 class Entity extends EventEmitter
-  constructor: ->
+  ->
     @cnt = 0
 
   onUpdate: ->

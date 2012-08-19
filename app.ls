@@ -1,3 +1,7 @@
+require 'coffee-script'
+require 'livescript'
+global <<< require 'prelude-ls'
+
 World = require './lib/world'
 world = new World
 
@@ -20,10 +24,11 @@ RedisStore = require('connect-redis')(express)
 session_store = new RedisStore()
 app.use express.bodyParser()
 app.use express.cookieParser()
-app.use express.session
+app.use express.session {
   secret: '<keyboard cat>'
   store: session_store
   cookie: maxAge: 60*60*1000
+}
 
 app.listen(5000)
 console.log('server start:', 5000)

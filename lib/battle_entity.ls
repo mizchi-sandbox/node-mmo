@@ -1,10 +1,10 @@
-_ = require 'underscore'
+_ = require \underscore
 
-Entity = require './entity'
+Entity = require \./entity
 {abs} = Math
 
 class BattleEntity extends Entity
-  constructor: ->
+  ->
     super()
     @x = 0
     @y = 0
@@ -17,28 +17,29 @@ class BattleEntity extends Entity
     @hp = 100
 
   onUpdate: ->
-    @_saveLastState()
+    @_saveLastState!
     if @_stunnedFrameCount > 0
       @_stunnedFrameCount--
     else if @_nextActionFrameCount > 0
       @_nextActionFrameCount--
 
-  distance: (other) ->
-    abs(@x - other.x) + abs(@y - other.y)
+  distance: ->
+    abs(@x - it.x) + abs(@y - it.y)
 
-  addStunValue: (val) ->
-    @_stunnedFrameCount += val
+  addStunValue: ->
+    @_stunnedFrameCount += it
 
-  addActionCost: (val) ->
-    @_nextActionFrameCount += val
+  addActionCost: ->
+    @_nextActionFrameCount += it
 
   canAction: ->
-    @_nextActionFrameCount <= 0 and not @isStunned() and @isAlive()
+    @_nextActionFrameCount <= 0 and not @isStunned! and @isAlive!
+
   isStunned: -> @_stunnedFrameCount > 0
 
   isAlive: -> @hp > 0
   isDead: -> not @isAlive()
 
-  _saveLastState:-> @_last = _.clone @
+  _saveLastState: -> @_last = _.clone @
 
 module.exports = BattleEntity
