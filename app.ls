@@ -17,8 +17,6 @@ app.use express.static(__dirname + '/public')
 app.use assets()
 app.set 'view engine', 'ejs'
 app.set 'view options', layout: false
-app.get '/', (req, res) ->
-  res.render 'index'
 
 # session
 RedisStore = require('connect-redis')(express)
@@ -66,3 +64,7 @@ entrance.on 'connection', (socket) ->
 world.start (world-state) ->
   entrance.emit 'update', worldState
 
+# rooting
+app.get '/', (req, res) ->
+  req.session.login_date = String Date.now()
+  res.render 'index'
