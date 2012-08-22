@@ -27,7 +27,17 @@ class PlayerLabel extends enchant.Label
 class PlayerAvatar extends enchant.Avatar
   constructor: (avatar) ->
     super avatar
-    @game = enchant.Game.instance
+    @scaleX = 0.5
+    @scaleY = 0.5
+
+    @x = - ~~(@width / 2)
+    @y = - ~~(@height / 2)
+
+# TODO impl
+class MonsterAvatar extends enchant.AvatarMonster
+  constructor: (img) ->
+    super game.assets["monster#{1+~~(Math.random()*2)}.gif"]
+
     @scaleX = 0.5
     @scaleY = 0.5
 
@@ -84,7 +94,7 @@ class PlayerHPGauge extends enchant.Sprite
 
 # 複数のプレーヤーパーツを束ねて表示するPlayerクラス
 class Nmmo.Player extends enchant.Group
-  constructor: (avatar, @user_id) ->
+  constructor: (avatar, @user_id, @object_id) ->
     @game = enchant.Game.instance
     super arguments...
 
@@ -92,7 +102,11 @@ class Nmmo.Player extends enchant.Group
     @HP = 1
 
     # アバター
-    @avatar = new PlayerAvatar avatar
+    if @object_id is 'player'
+      @avatar = new PlayerAvatar avatar
+    else
+      @avatar = new MonsterAvatar
+
     @addChild @avatar
 
     # ラベル
@@ -110,15 +124,23 @@ class Nmmo.Player extends enchant.Group
   isControlled: -> @user_id is @game.player_id
 
   update: ({
-    x, y, user_id,
+    x, y, user_id, object_id
     avatar, action, dir
     hp, HP
   }) ->
     @user_id = user_id
+    @object_id = object_id
     @moveTo x, y
 
     @avatar.avatar = avatar
-    @avatar.action = action
+
+    if @object_id is 'player'
+      @avatar.action = action
+    else if @object_id is 'monster'
+      # TODO: モンスターの場合のアニメーションパターンをちゃんとしらべる
+      if action in ['stop', 'walk', 'appear', 'disappear', 'attack' ]
+        @avatar.action = action
+
     @avatar.dir = dir
 
     @hp = hp

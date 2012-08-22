@@ -12,6 +12,9 @@ class Nmmo.Game extends enchant.Game
       "avatarBg1.png"
       "avatarBg2.png"
       "avatarBg3.png"
+      "monster1.gif"
+      "monster2.gif"
+      "monster3.gif"
     ]
 
   onload: ->
@@ -25,6 +28,8 @@ class Nmmo.Game extends enchant.Game
     @rootScene.addChild _.tap new enchant.Label, (label) =>
       label.text = "Nmmo Test Scene"
       label.color = "white"
+
+    # @rootScene.addChild new enchant.AvatarMonster(game.assets['monster1.gif'])
 
   bindIO: (socket) ->
     socket.on 'getPlayerData', (@player_id) =>
@@ -40,7 +45,7 @@ class Nmmo.Game extends enchant.Game
     for obj in objects
       decoded = decodeObject obj
       unless decoded.user_id in client_ids
-        @players.addChild new Nmmo.Player(decoded.avatar, decoded.user_id)
+        @players.addChild new Nmmo.Player(decoded.avatar, decoded.user_id, decoded.object_id)
 
     # オブジェクトの削除
     for node in @players.childNodes

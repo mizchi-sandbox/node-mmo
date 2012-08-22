@@ -3,6 +3,7 @@ _ = require \underscore
 BattleEntity = require \./battle_entity
 
 class Player extends BattleEntity
+  object_id: 'player'
   (@world, @user_id) ->
     super()
     @x = 0  + ~~(Math.random()*320)
@@ -15,7 +16,7 @@ class Player extends BattleEntity
       left : false
       a: false
       b: false
-    @initStatus()
+    @revive()
 
     gender = ~~(Math.random!*2) + 1
     hair = ~~(Math.random!*9) + 1
@@ -25,23 +26,28 @@ class Player extends BattleEntity
     @on 'update', @on-update
     @on 'attacked', @on-attacked
 
-  init-status: ->
+  revive: ->
     @x = 0  + ~~(Math.random!*320)
     @y = 60 + ~~(Math.random!*100)
     @hp = @HP
+
+  on-death: ->
+    # カウントダウン
+    @_dead_count ?= 60
+    @_dead_count--
+    if @_dead_count is 0
+      delete @_dead_count
+      # 復活処理
+      @revive()
 
   on-update: ->
     super()
     @move()
     @update-avatar-action()
 
-    if @isDead()
-      @_dead_count ?= 60
-      @_dead_count--
-      if @_dead_count is 0
-        delete @_dead_count
-        # 復活処理
-        @initStatus()
+    if @isDead!
+      @on-death!
+      return
 
     # Aボタンを押していれば攻撃
     if @can-action() and @is-pushed \a
@@ -118,5 +124,6 @@ class Player extends BattleEntity
           -1
         else
           @dir
+
 
 module.exports = Player
